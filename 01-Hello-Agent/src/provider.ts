@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 type Provider = "openai" | "gemini" | "groq";
 
 type HelloOutput = {
@@ -43,7 +45,7 @@ async function helloGemini(): Promise<HelloOutput> {
     json.candidates?.[0]?.content?.parts?.[0].text ?? "Hello as default";
 
   return {
-    ok,
+    ok: true,
     provider: "gemini",
     model: model,
     message: text,
