@@ -51,3 +51,47 @@ async function helloGemini(): Promise<HelloOutput> {
     message: text,
   };
 }
+
+type OpenAiChatCompletion = {
+  choices?: Array<{ message?: { content: string } }>;
+};
+
+async function helloGroq(): Promise<HelloOutput> {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error("Invalid Groq api key");
+  const model = "llama-3.1-8b-instant";
+  const url = `https://api.groq.com/openai/v1/completions`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "Application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        {
+          role: "user",
+          content: "Say a short hello",
+        },
+      ],
+      temperature: 0,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Gemini ${response.status}: ${await response.text()}`);
+  }
+
+  const json = (await response.json()) as GeminiGenerateOutput;
+  const text =
+    json.candidates?.[0]?.content?.parts?.[0].text ?? "Hello as default";
+
+  return {
+    ok: true,
+    provider: "groq",
+    model: model,
+    message: String(text).trim(),
+  };
+}
