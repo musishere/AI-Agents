@@ -61,7 +61,7 @@ async function helloGroq(): Promise<HelloOutput> {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) throw new Error("Invalid Groq api key");
   const model = "llama-3.1-8b-instant";
-  const url = `https://api.groq.com/openai/v1/completions`;
+  const url = `https://api.groq.com/openai/v1`;
 
   const response = await fetch(url, {
     method: "POST",
