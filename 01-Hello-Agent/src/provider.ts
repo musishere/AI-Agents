@@ -1,5 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
+import { configDotenv } from "dotenv";
+
+configDotenv();
 type Provider = "openai" | "gemini" | "groq";
 
 type HelloOutput = {
@@ -17,8 +18,8 @@ async function helloGemini(): Promise<HelloOutput> {
   const apiKey = process.env.GOOGLE_GEMINI_KEY;
   if (!apiKey) throw new Error("Invalid Api Key");
 
-  const model = "gemini - 2.0 - flash - lite";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const model = "gemini-2.0-flash-lite";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -26,7 +27,7 @@ async function helloGemini(): Promise<HelloOutput> {
       "Content-Type": "Application/json",
     },
     body: JSON.stringify({
-      content: {
+      contents: {
         parts: [
           {
             text: "Say a short hello",
@@ -81,7 +82,7 @@ async function helloGroq(): Promise<HelloOutput> {
   });
 
   if (!response.ok) {
-    throw new Error(`Gemini ${response.status}: ${await response.text()}`);
+    throw new Error(`Groq ${response.status}: ${await response.text()}`);
   }
 
   const json = (await response.json()) as GeminiGenerateOutput;
@@ -94,4 +95,58 @@ async function helloGroq(): Promise<HelloOutput> {
     model: model,
     message: String(text).trim(),
   };
+}
+
+async function helloOpenAi(): Promise<HelloOutput> {
+  const apiKey = process.env.OPENAIAPIKEY;
+  if (!apiKey) throw new Error("Invalid Groq api key");
+  const model = "llama-3.1-8b-instant";
+  const url = `https://api.openai.com/v1/completions`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "Application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        {
+          role: "user",
+          content: "Say a short hello",
+        },
+      ],
+      temperature: 0,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`OpenAI ${response.status}: ${await response.text()}`);
+  }
+
+  const json = (await response.json()) as GeminiGenerateOutput;
+  const text =
+    json.candidates?.[0]?.content?.parts?.[0].text ?? "Hello as default";
+
+  return {
+    ok: true,
+    provider: "openai",
+    model: model,
+    message: String(text).trim(),
+  };
+}
+
+export async function selectProviderAndStart(): Promise<HelloOutput> {
+  const defaulProvider = process.env.PROVIDER;
+
+  if (!defaulProvider) {
+    throw new Error("Provide the provider");
+  }
+
+  if (defaulProvider === "gemini") return helloGemini();
+  if (defaulProvider === "openai") return helloOpenAi();
+  if (defaulProvider === "groq") return helloGroq();
+
+  throw new Error(`Unknown provider: ${defaulProvider}`);
 }
