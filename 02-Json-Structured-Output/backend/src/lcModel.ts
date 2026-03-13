@@ -24,7 +24,6 @@ export function createChatModel(): { provider: Provider; model: any } {
       }),
     };
   }
-
   if (forced === "gemini" || (!forced && hasGemini)) {
     return {
       provider: "gemini",
