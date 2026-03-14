@@ -4,6 +4,7 @@ import { askResult, askResultsSchema } from "./schema";
 export async function askStructured(query: string): Promise<askResult> {
   // 1. get the available model
   const { model } = createChatModel();
+  console.log(model);
 
   // 2. write system prompts and user query
   const system = "You are a concise assistant. Return only the requested JSON";

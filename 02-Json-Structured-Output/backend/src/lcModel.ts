@@ -45,10 +45,10 @@ export function createChatModel(): { provider: Provider; model: any } {
   }
 
   return {
-    provider: "gemini",
-    model: new ChatGoogleGenerativeAI({
+    provider: "groq",
+    model: new ChatGroq({
       ...base,
-      model: "gemini-2.0-flash-lite",
+      model: "llama-3.1-8b-instant",
     }),
   };
 }
