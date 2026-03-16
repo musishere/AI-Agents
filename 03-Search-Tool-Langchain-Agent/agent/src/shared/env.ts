@@ -13,3 +13,5 @@ const envSchema = z.object({
   SEARCH_PROVIDER: z.string().default("tavily"),
   TAVILY_API_KEY: z.string().optional(),
 });
+
+export const env = envSchema.parse(process.env);
