@@ -1,5 +1,4 @@
 // Search on internet tool
-
 import { env } from "../shared/env";
 import { webResultSchema, WebSearchResult } from "./schema";
 
