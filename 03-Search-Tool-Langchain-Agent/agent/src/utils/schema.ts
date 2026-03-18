@@ -8,3 +8,11 @@ export const webResultSchema = z.object({
 
 export const WebSearchResult = z.array(webResultSchema).max(10);
 export type WebSearchResult = z.infer<typeof webResultSchema>;
+export const OpenUrlInputSchmea = z.object({
+  url: z.url(),
+});
+
+export const OpenUrlOutputSchema = z.object({
+  url: z.url(),
+  content: z.string().min(1),
+});
