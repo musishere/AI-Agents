@@ -16,3 +16,11 @@ export const OpenUrlOutputSchema = z.object({
   url: z.url(),
   content: z.string().min(1),
 });
+
+export const SummarizeInputSchema = z.object({
+  text: z.string().min(50, "Length should be 50(minimum)"),
+});
+
+export const SummarizeOutputSchema = z.object({
+  summary: z.string().min(1),
+});
