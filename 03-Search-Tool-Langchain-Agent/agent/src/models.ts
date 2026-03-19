@@ -24,7 +24,7 @@ export function getChatModel(opts: modelOpts = {}): BaseChatModel {
       return new ChatOpenAI({
         apiKey: env.OPENAI_API_KEY,
         model: env.OPENAI_MODEL,
-        temperature: temp,
+        temperature:  temp,
       });
     case "groq":
       return new ChatGroq({
