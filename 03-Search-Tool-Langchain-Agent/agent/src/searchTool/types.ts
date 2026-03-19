@@ -4,4 +4,9 @@ export type candidate = {
     mode: 'web'|'direct',
 }
 
+export type ModeResponse = {
+    q : string,
+    mode : 'web'|'direct'
+}
+
 // for simple answers
